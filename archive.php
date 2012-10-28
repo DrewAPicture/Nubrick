@@ -35,6 +35,9 @@ get_header(); ?>
 						_e( 'Archives', 'twentytwelve' );
 					endif;
 				?></h1>
+
+				<?php twentytwelve_content_nav( 'nav-below' ); ?>
+
 			</header><!-- .archive-header -->
 
 			<?php
@@ -48,8 +51,6 @@ get_header(); ?>
 				get_template_part( 'content', get_post_format() );
 
 			endwhile;
-
-			twentytwelve_content_nav( 'nav-below' );
 			?>
 
 		<?php else : ?>

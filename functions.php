@@ -1,447 +1,325 @@
 <?php
 /**
- * Twenty Twelve functions and definitions.
- *
- * Sets up the theme and provides some helper functions, which are used
- * in the theme as custom template tags. Others are attached to action and
- * filter hooks in WordPress to change core functionality.
- *
- * When using a child theme (see http://codex.wordpress.org/Theme_Development and
- * http://codex.wordpress.org/Child_Themes), you can override certain functions
- * (those wrapped in a function_exists() call) by defining them first in your child theme's
- * functions.php file. The child theme's functions.php file is included before the parent
- * theme's file, so the child theme functions would be used.
- *
- * Functions that are not pluggable (not wrapped in function_exists()) are instead attached
- * to a filter or action hook.
- *
- * For more information on hooks, actions, and filters, see http://codex.wordpress.org/Plugin_API.
+ * Nubrick child theme functions
  *
  * @package WordPress
- * @subpackage Twenty_Twelve
- * @since Twenty Twelve 1.0
+ * @subpackage Nubrick
+ * @since Nubrick 1.0
  */
 
 /**
- * Sets up the content width value based on the theme's design and stylesheet.
- */
-if ( ! isset( $content_width ) )
-	$content_width = 625;
-
-/**
- * Sets up theme defaults and registers the various WordPress features that
- * Twenty Twelve supports.
+ * Setup Nubrick Child Textdomain
  *
- * @uses load_theme_textdomain() For translation/localization support.
- * @uses add_editor_style() To add a Visual Editor stylesheet.
- * @uses add_theme_support() To add support for post thumbnails, automatic feed links,
- * 	custom background, and post formats.
- * @uses register_nav_menu() To add support for navigation menus.
- * @uses set_post_thumbnail_size() To set a custom post thumbnail size.
- *
- * @since Twenty Twelve 1.0
+ * Declares the textdomain for this child theme
+ * Translations can be filed in the /languages/ directory
  */
-function twentytwelve_setup() {
-	/*
-	 * Makes Twenty Twelve available for translation.
-	 *
-	 * Translations can be added to the /languages/ directory.
-	 * If you're building a theme based on Twenty Twelve, use a find and replace
-	 * to change 'twentytwelve' to the name of your theme in all the template files.
-	 */
-	load_theme_textdomain( 'twentytwelve', get_template_directory() . '/languages' );
-
-	// This theme styles the visual editor with editor-style.css to match the theme style.
-	add_editor_style();
-
-	// Adds RSS feed links to <head> for posts and comments.
-	add_theme_support( 'automatic-feed-links' );
-
-	// This theme supports a variety of post formats.
-	add_theme_support( 'post-formats', array( 'aside', 'image', 'link', 'quote', 'status' ) );
-
-	// This theme uses wp_nav_menu() in one location.
-	register_nav_menu( 'primary', __( 'Primary Menu', 'twentytwelve' ) );
-
-	/*
-	 * This theme supports custom background color and image, and here
-	 * we also set up the default background color.
-	 */
-	add_theme_support( 'custom-background', array(
-		'default-color' => 'e6e6e6',
-	) );
-
-	// This theme uses a custom image size for featured images, displayed on "standard" posts.
-	add_theme_support( 'post-thumbnails' );
-	set_post_thumbnail_size( 624, 9999 ); // Unlimited height, soft crop
+function nubrick_setup() {
+	load_child_theme_textdomain( 'nubrick', get_stylesheet_directory() . '/languages' );
 }
-add_action( 'after_setup_theme', 'twentytwelve_setup' );
+add_action( 'after_setup_theme', 'nubrick_setup' );
+
 
 /**
- * Adds support for a custom header image.
- */
-require( get_template_directory() . '/inc/custom-header.php' );
-
-/**
- * Enqueues scripts and styles for front-end.
+ * Overwrite twentytwelve_content_nav().
+ * NOTE:
+ *		single.php has its own version of
+ * 		this code block which we've rolled into
+ * 		nubrick_content_nav_single()
  *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_scripts_styles() {
-	global $wp_styles;
-
-	/*
-	 * Adds JavaScript to pages with the comment form to support
-	 * sites with threaded comments (when in use).
-	 */
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) )
-		wp_enqueue_script( 'comment-reply' );
-
-	/*
-	 * Adds JavaScript for handling the navigation menu hide-and-show behavior.
-	 */
-	wp_enqueue_script( 'twentytwelve-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0', true );
-
-	/*
-	 * Loads our special font CSS file.
-	 *
-	 * The use of Open Sans by default is localized. For languages that use
-	 * characters not supported by the font, the font can be disabled.
-	 *
-	 * To disable in a child theme, use wp_dequeue_style()
-	 * function mytheme_dequeue_fonts() {
-	 *     wp_dequeue_style( 'twentytwelve-fonts' );
-	 * }
-	 * add_action( 'wp_enqueue_scripts', 'mytheme_dequeue_fonts', 11 );
-	 */
-
-	/* translators: If there are characters in your language that are not supported
-	   by Open Sans, translate this to 'off'. Do not translate into your own language. */
-	if ( 'off' !== _x( 'on', 'Open Sans font: on or off', 'twentytwelve' ) ) {
-		$subsets = 'latin,latin-ext';
-
-		/* translators: To add an additional Open Sans character subset specific to your language, translate
-		   this to 'greek', 'cyrillic' or 'vietnamese'. Do not translate into your own language. */
-		$subset = _x( 'no-subset', 'Open Sans font: add new subset (greek, cyrillic, vietnamese)', 'twentytwelve' );
-
-		if ( 'cyrillic' == $subset )
-			$subsets .= ',cyrillic,cyrillic-ext';
-		elseif ( 'greek' == $subset )
-			$subsets .= ',greek,greek-ext';
-		elseif ( 'vietnamese' == $subset )
-			$subsets .= ',vietnamese';
-
-		$protocol = is_ssl() ? 'https' : 'http';
-		$query_args = array(
-			'family' => 'Open+Sans:400italic,700italic,400,700',
-			'subset' => $subsets,
-		);
-		wp_enqueue_style( 'twentytwelve-fonts', add_query_arg( $query_args, "$protocol://fonts.googleapis.com/css" ), array(), null );
-	}
-
-	/*
-	 * Loads our main stylesheet.
-	 */
-	wp_enqueue_style( 'twentytwelve-style', get_stylesheet_uri() );
-
-	/*
-	 * Loads the Internet Explorer specific stylesheet.
-	 */
-	wp_enqueue_style( 'twentytwelve-ie', get_template_directory_uri() . '/css/ie.css', array( 'twentytwelve-style' ), '20121010' );
-	$wp_styles->add_data( 'twentytwelve-ie', 'conditional', 'lt IE 9' );
-}
-add_action( 'wp_enqueue_scripts', 'twentytwelve_scripts_styles' );
-
-/**
- * Creates a nicely formatted and more specific title element text
- * for output in head of document, based on current view.
- *
- * @since Twenty Twelve 1.0
- *
- * @param string $title Default title text for current view.
- * @param string $sep Optional separator.
- * @return string Filtered title.
- */
-function twentytwelve_wp_title( $title, $sep ) {
-	global $paged, $page;
-
-	if ( is_feed() )
-		return $title;
-
-	// Add the site name.
-	$title .= get_bloginfo( 'name' );
-
-	// Add the site description for the home/front page.
-	$site_description = get_bloginfo( 'description', 'display' );
-	if ( $site_description && ( is_home() || is_front_page() ) )
-		$title = "$title $sep $site_description";
-
-	// Add a page number if necessary.
-	if ( $paged >= 2 || $page >= 2 )
-		$title = "$title $sep " . sprintf( __( 'Page %s', 'twentytwelve' ), max( $paged, $page ) );
-
-	return $title;
-}
-add_filter( 'wp_title', 'twentytwelve_wp_title', 10, 2 );
-
-/**
- * Makes our wp_nav_menu() fallback -- wp_page_menu() -- show a home link.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_page_menu_args( $args ) {
-	$args['show_home'] = true;
-	return $args;
-}
-add_filter( 'wp_page_menu_args', 'twentytwelve_page_menu_args' );
-
-/**
- * Registers our main widget area and the front page widget areas.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_widgets_init() {
-	register_sidebar( array(
-		'name' => __( 'Main Sidebar', 'twentytwelve' ),
-		'id' => 'sidebar-1',
-		'description' => __( 'Appears on posts and pages except the optional Front Page template, which has its own widgets', 'twentytwelve' ),
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-		'after_widget' => '</aside>',
-		'before_title' => '<h3 class="widget-title">',
-		'after_title' => '</h3>',
-	) );
-
-	register_sidebar( array(
-		'name' => __( 'First Front Page Widget Area', 'twentytwelve' ),
-		'id' => 'sidebar-2',
-		'description' => __( 'Appears when using the optional Front Page template with a page set as Static Front Page', 'twentytwelve' ),
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-		'after_widget' => '</aside>',
-		'before_title' => '<h3 class="widget-title">',
-		'after_title' => '</h3>',
-	) );
-
-	register_sidebar( array(
-		'name' => __( 'Second Front Page Widget Area', 'twentytwelve' ),
-		'id' => 'sidebar-3',
-		'description' => __( 'Appears when using the optional Front Page template with a page set as Static Front Page', 'twentytwelve' ),
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-		'after_widget' => '</aside>',
-		'before_title' => '<h3 class="widget-title">',
-		'after_title' => '</h3>',
-	) );
-}
-add_action( 'widgets_init', 'twentytwelve_widgets_init' );
-
-if ( ! function_exists( 'twentytwelve_content_nav' ) ) :
-/**
- * Displays navigation to next/previous pages when applicable.
- *
- * @since Twenty Twelve 1.0
+ * @since Nubrick 1.0
  */
 function twentytwelve_content_nav( $nav_id ) {
 	global $wp_query;
 
 	if ( $wp_query->max_num_pages > 1 ) : ?>
 		<nav id="<?php echo $nav_id; ?>" class="navigation" role="navigation">
-			<h3 class="assistive-text"><?php _e( 'Post navigation', 'twentytwelve' ); ?></h3>
-			<div class="nav-previous alignleft"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'twentytwelve' ) ); ?></div>
-			<div class="nav-next alignright"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'twentytwelve' ) ); ?></div>
+			<h3 class="assistive-text"><?php _e( 'Post navigation', 'nubrick' ); ?></h3>
+			<div class="nav-previous alignleft"><?php next_posts_link( __( '<span class="meta-nav">&laquo;</span> Older posts', 'nubrick' ) ); ?></div>
+			<div class="nav-next alignright"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&raquo;</span>', 'nubrick' ) ); ?></div>
 		</nav><!-- #<?php echo $nav_id; ?> .navigation -->
 	<?php endif;
 }
-endif;
 
-if ( ! function_exists( 'twentytwelve_comment' ) ) :
+
 /**
- * Template for comments and pingbacks.
+ * Single post-version of twentytwelve_content_nav().
  *
- * To override this walker in a child theme without modifying the comments template
- * simply create your own twentytwelve_comment(), and that function will be used instead.
- *
- * Used as a callback by wp_list_comments() for displaying the comments.
- *
- * @since Twenty Twelve 1.0
+ * @since Nubrick 1.0
  */
-function twentytwelve_comment( $comment, $args, $depth ) {
-	$GLOBALS['comment'] = $comment;
-	switch ( $comment->comment_type ) :
-		case 'pingback' :
-		case 'trackback' :
-		// Display trackbacks differently than normal comments.
-	?>
-	<li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
-		<p><?php _e( 'Pingback:', 'twentytwelve' ); ?> <?php comment_author_link(); ?> <?php edit_comment_link( __( '(Edit)', 'twentytwelve' ), '<span class="edit-link">', '</span>' ); ?></p>
-	<?php
-			break;
-		default :
-		// Proceed with normal comments.
-		global $post;
-	?>
-	<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
-		<article id="comment-<?php comment_ID(); ?>" class="comment">
-			<header class="comment-meta comment-author vcard">
-				<?php
-					echo get_avatar( $comment, 44 );
-					printf( '<cite class="fn">%1$s %2$s</cite>',
-						get_comment_author_link(),
-						// If current post author is also comment author, make it known visually.
-						( $comment->user_id === $post->post_author ) ? '<span> ' . __( 'Post author', 'twentytwelve' ) . '</span>' : ''
-					);
-					printf( '<a href="%1$s"><time datetime="%2$s">%3$s</time></a>',
-						esc_url( get_comment_link( $comment->comment_ID ) ),
-						get_comment_time( 'c' ),
-						/* translators: 1: date, 2: time */
-						sprintf( __( '%1$s at %2$s', 'twentytwelve' ), get_comment_date(), get_comment_time() )
-					);
-				?>
-			</header><!-- .comment-meta -->
-
-			<?php if ( '0' == $comment->comment_approved ) : ?>
-				<p class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'twentytwelve' ); ?></p>
-			<?php endif; ?>
-
-			<section class="comment-content comment">
-				<?php comment_text(); ?>
-				<?php edit_comment_link( __( 'Edit', 'twentytwelve' ), '<p class="edit-link">', '</p>' ); ?>
-			</section><!-- .comment-content -->
-
-			<div class="reply">
-				<?php comment_reply_link( array_merge( $args, array( 'reply_text' => __( 'Reply <span>&darr;</span>', 'twentytwelve' ), 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
-			</div><!-- .reply -->
-		</article><!-- #comment-## -->
-	<?php
-		break;
-	endswitch; // end comment_type check
+function nubrick_content_nav_single() {
+	if ( is_single() ) : ?>
+		<nav class="nav-single">
+			<h3 class="assistive-text"><?php _e( 'Post navigation', 'nubrick' ); ?></h3>
+			<span class="nav-previous"><?php previous_post_link( '%link', '<span class="meta-nav">' . _x( '&laquo;', 'Previous post link', 'nubrick' ) . '</span> %title' ); ?></span>
+			<span class="nav-next"><?php next_post_link( '%link', '%title <span class="meta-nav">' . _x( '&raquo;', 'Next post link', 'nubrick' ) . '</span>' ); ?></span>
+		</nav><!-- .nav-single -->
+	<?php endif;	
 }
-endif;
 
-if ( ! function_exists( 'twentytwelve_entry_meta' ) ) :
+
 /**
+ * Overwrites twentytwelve_entry_meta()
+ *
  * Prints HTML with meta information for current post: categories, tags, permalink, author, and date.
  *
- * Create your own twentytwelve_entry_meta() to override in a child theme.
- *
- * @since Twenty Twelve 1.0
+ * @since Nubrick 1.0
  */
 function twentytwelve_entry_meta() {
 	// Translators: used between list items, there is a space after the comma.
-	$categories_list = get_the_category_list( __( ', ', 'twentytwelve' ) );
+	$categories_list = get_the_category_list( __( ', ', 'nubrick' ) );
 
-	// Translators: used between list items, there is a space after the comma.
-	$tag_list = get_the_tag_list( '', __( ', ', 'twentytwelve' ) );
-
-	$date = sprintf( '<a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a>',
-		esc_url( get_permalink() ),
-		esc_attr( get_the_time() ),
+	$date = sprintf( '<time class="entry-date" datetime="%s" pubdate>%s</time>',
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( get_the_date() )
 	);
 
-	$author = sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s" rel="author">%3$s</a></span>',
-		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		esc_attr( sprintf( __( 'View all posts by %s', 'twentytwelve' ), get_the_author() ) ),
-		get_the_author()
+	if ( comments_open() && pings_open() ) {
+		$comments_pings = sprintf( __('You can <a href="#respond">%1$s</a>, or <a href="%2$s" rel="trackback">%3$s</a> from your own site.', 'nubrick' ), 
+			__( 'leave a response', 'nubrick' ),
+			get_trackback_url(),
+			__( 'trackback', 'nubrick' )
+		);
+	} elseif ( ! comments_open() && pings_open() ) {
+		$comments_pings = sprintf( __( 'Responses are currently closed, but you can <a href="%1$s" rel="trackback">%2$s</a> from your own site.', 'nubrick' ),
+			get_trackback_url(),
+			__( 'trackback', 'nubrick' )
+		);
+	} elseif ( comments_open() && ! pings_open() ) {
+		$comments_pings = sprintf( __( 'You can skip to the end and <a href="#respond">%1$s</a>. Trackbacks are not allowed.', 'nubrick' ), 
+			__( 'leave a response', 'nubrick' )
+		);
+	} elseif ( ! comments_open() && ! pings_open() ) {
+		$comments_pings = __( 'Both comments and trackbacks are currently closed.', 'nubrick' );
+	}
+
+	// Translators: 1 is the date, 2 is the time, 3 is categories, 4 is RSS link, 5 is response & trackbacks
+	$single_meta = __( 'This entry was posted on %1$s at %2$s and is filed under %3$s. You can follow any responses to this entry through the <a href="%4$s">RSS 2.0</a> feed. %5$s', 'nubrick' );
+?>
+
+	<p><?php __( 'Tags: ', 'nubrick' ); the_tags( __( 'Tags: ', 'nubrick' ), ', ' ); ?></p>
+
+	<?php if ( is_single() ) : ?>
+
+		<p class="alt">
+			<small>
+				<?php printf( $single_meta,
+					$date,
+					get_the_time(),
+					$categories_list,
+					get_post_comments_feed_link(),
+					$comments_pings
+				 ); ?>
+			</small>
+		</p><!-- /.alt -->
+
+	<?php else: ?>
+
+		<p>
+			<?php printf( __( 'Posted in %s', 'nubrick' ), $categories_list ); ?>
+			<?php edit_post_link( __( 'Edit', 'nubrick' ), ' | <span class="edit-link">', '</span>' ); ?>
+			 | <?php comments_popup_link( __( 'No Comments &#187;', 'nubrick' ), __( '1 Comment', 'nubrick' ), __( '% Comments', 'nubrick' ), __( 'Comments Off', 'nubrick' ) ); ?>
+		</p>
+
+	<?php endif; // is_single
+
+}
+
+
+/**
+ * Reset Custom Background default color value.
+ *
+ * @since Nubrick 1.0
+ */
+function nubrick_reset_supports() {	
+	// Remove custom-background support added by Twenty Twelve
+	remove_theme_support( 'custom-background' );
+
+	// Re-add with new default color
+	add_theme_support( 'custom-background', array(
+		'default-color' => 'e7e7e7'
+	) );
+}
+
+add_action( 'after_setup_theme', 'nubrick_reset_supports' );
+
+
+/**
+ * Add Header Color options to Customizer.
+ *
+ * @param $wp_customize global
+ * @since Nubrick 1.0
+ */
+function nubrick_customizer_init( $wp_customize ) {
+	
+	/**
+	 * Temporarily unset 'Header Text Color' & 'Background Color'
+	 * controls from the Customizer, we'll add them back later.
+	 */
+	$wp_customize->remove_control( 'header_textcolor' );
+	$wp_customize->remove_control( 'background_color' );
+	
+	/**
+	 * Add 'Gradient Direction' select box
+	 * Default is 'Top'
+	 */
+	$wp_customize->add_setting(
+		'nubrick_gradient_direction', array( 'default' => 'top' )
+	);
+	$wp_customize->add_control( 'nubrick_gradient_direction', array(
+		'label' => __( 'Header Gradient Direction', 'nubrick' ),
+		'section' => 'colors',
+		'type' => 'select',
+		'choices' => array(
+			'top' => __( 'Top', 'nubrick' ),
+			'bottom' => __( 'Bottom', 'nubrick' ),
+			'left' => __( 'Left', 'nubrick' ),
+			'right' => __( 'Right', 'nubrick' ),
+			'left top' => __( 'Top Left', 'nubrick' ),
+			'right top' => __( 'Top Right', 'nubrick' ),
+			'left bottom' => __( 'Bottom Left', 'nubrick' ),
+			'right bottom' => __( 'Bottom Right', 'nubrick' )
+			)
+		)
 	);
 
-	// Translators: 1 is category, 2 is tag, 3 is the date and 4 is the author's name.
-	if ( $tag_list ) {
-		$utility_text = __( 'This entry was posted in %1$s and tagged %2$s on %3$s<span class="by-author"> by %4$s</span>.', 'twentytwelve' );
-	} elseif ( $categories_list ) {
-		$utility_text = __( 'This entry was posted in %1$s on %3$s<span class="by-author"> by %4$s</span>.', 'twentytwelve' );
-	} else {
-		$utility_text = __( 'This entry was posted on %3$s<span class="by-author"> by %4$s</span>.', 'twentytwelve' );
-	}
-
-	printf(
-		$utility_text,
-		$categories_list,
-		$tag_list,
-		$date,
-		$author
+	/**
+	 * Add 'Top Color' setting & control to Customizer.
+	 * Default is #69aee7
+	 */
+	$wp_customize->add_setting( 
+		'nubrick_first_header_color', array( 'default' => '#69aee7' )
 	);
+	$wp_customize->add_control( 
+		new WP_Customize_Color_Control( $wp_customize, 'nubrick_first_header_color', array(
+			'label' => __( 'First Header Color', 'nubrick' ),
+			'section' => 'colors',
+			'settings' => 'nubrick_first_header_color',
+			) 
+		) 
+	);
+
+	/**
+	 * Add 'Bottom Color' setting & control to Customizer.
+	 * Default is #4180b6
+	 */
+	$wp_customize->add_setting( 
+		'nubrick_second_header_color', array( 'default' => '#4180b6' )
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control( $wp_customize, 'nubrick_second_header_color', array(
+			'label' => __( 'Second Header Color', 'nubrick' ),
+			'section' => 'colors',
+			'settings' => 'nubrick_second_header_color'
+			)
+		)
+	);
+	
+	/**
+	 * Re-add 'Header Text Color' & 'Background Color' controls to Customizer.
+	 * Default Background Color is '#e7e7e7'
+	 */
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control( $wp_customize, 'header_textcolor', array(
+			'label'   => __( 'Header Text Color', 'nubrick' ),
+			'section' => 'colors'
+			)
+		)
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control( $wp_customize, 'background_color', array(
+			'label'   => __( 'Background Color', 'nubrick' ),
+			'section' => 'colors'
+			)
+		)
+	);
+
+	/**
+	 * Add Site Width setting
+	 * Default is 740px
+	 */
+	$wp_customize->add_setting(
+		'nubrick_site_width', array( 'default' => 740 )
+	);
+	$wp_customize->add_control( 'nubrick_site_width', array( 
+		'label' => __( 'Site Width (px)', 'nubrick' ),
+		'section' => 'colors'
+		)
+	);
+	
+
 }
-endif;
+add_action( 'customize_register', 'nubrick_customizer_init' );
+
 
 /**
- * Extends the default WordPress body class to denote:
- * 1. Using a full-width layout, when no active widgets in the sidebar
- *    or full-width template.
- * 2. Front Page template: thumbnail in use and number of sidebars for
- *    widget areas.
- * 3. White or empty background color to change the layout and spacing.
- * 4. Custom fonts enabled.
- * 5. Single or multiple authors.
+ * Dequeue unneeded scripts from Twenty Twelve
  *
- * @since Twenty Twelve 1.0
- *
- * @param array Existing class values.
- * @return array Filtered class values.
+ * @since Nubrick 1.0
  */
-function twentytwelve_body_class( $classes ) {
-	$background_color = get_background_color();
+function nubrick_dequeue_scripts() {
+	// Dequeue unneeded navigation script
+	wp_dequeue_script( 'twentytwelve-navigation' );
 
-	if ( ! is_active_sidebar( 'sidebar-1' ) || is_page_template( 'page-templates/full-width.php' ) )
-		$classes[] = 'full-width';
-
-	if ( is_page_template( 'page-templates/front-page.php' ) ) {
-		$classes[] = 'template-front-page';
-		if ( has_post_thumbnail() )
-			$classes[] = 'has-post-thumbnail';
-		if ( is_active_sidebar( 'sidebar-2' ) && is_active_sidebar( 'sidebar-3' ) )
-			$classes[] = 'two-sidebars';
-	}
-
-	if ( empty( $background_color ) )
-		$classes[] = 'custom-background-empty';
-	elseif ( in_array( $background_color, array( 'fff', 'ffffff' ) ) )
-		$classes[] = 'custom-background-white';
-
-	// Enable custom font class only if the font CSS is queued to load.
-	if ( wp_style_is( 'twentytwelve-fonts', 'queue' ) )
-		$classes[] = 'custom-font-enabled';
-
-	if ( ! is_multi_author() )
-		$classes[] = 'single-author';
-
-	return $classes;
+	// Dequeue Open Sans font
+	wp_dequeue_style( 'twentytwelve-fonts' );
 }
-add_filter( 'body_class', 'twentytwelve_body_class' );
+add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
+
 
 /**
- * Adjusts content_width value for full-width and single image attachment
- * templates, and when there are no active widgets in the sidebar.
+ * Enqueue dynamic stylesheet for Header Color gradient effect.
  *
- * @since Twenty Twelve 1.0
+ * @since Nubrick 1.0
  */
-function twentytwelve_content_width() {
-	if ( is_page_template( 'page-templates/full-width.php' ) || is_attachment() || ! is_active_sidebar( 'sidebar-1' ) ) {
-		global $content_width;
-		$content_width = 960;
-	}
+function nubrick_enqueue_dynamic_styles() {	
+	// Setup dynamic style values
+	$first_color = str_replace( '#', '', get_theme_mod( 'nubrick_first_header_color' ) );
+	$second_color = str_replace( '#', '', get_theme_mod( 'nubrick_second_header_color' ) );
+	$direction = get_theme_mod( 'nubrick_gradient_direction' );
+
+	// Site width
+	$width = get_theme_mod( 'nubrick_site_width' );
+	if ( intval( $width ) < 1 || ! is_numeric( $width ) )
+		$width = '';
+
+	// Setup empty values
+	$header_img = $img = '';
+	
+	$header_img = get_header_image();
+	
+	if ( ! empty( $header_img ) )
+		$img = urlencode( $header_img );
+	
+	// Set single post flag
+	is_single() ? $single = true : $single = false;
+
+	// Build query string from our values
+	// 
+	$options = sprintf( 'first=%1$s&second=%2$s&dir=%3$s&img=%4$s&single=%5$s&width=%6$s',
+	 	$first_color,
+		$second_color,
+		$direction,
+		$img,
+		$single,
+		$width
+	);
+	
+	wp_register_style( 'nubrick-dynamic', get_stylesheet_directory_uri() . '/inc/dynamic-style.php?' . $options );
+	wp_enqueue_style( 'nubrick-dynamic' );
 }
-add_action( 'template_redirect', 'twentytwelve_content_width' );
+
+// Priority 30 to make sure it gets printed AFTER style.css
+add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_dynamic_styles', 30 );
+
 
 /**
- * Add postMessage support for site title and description for the Theme Customizer.
+ * Prepend the WordPress credits with our Nubricky message.
+ * Using this action was overkill, I just wanted to!
  *
- * @since Twenty Twelve 1.0
- *
- * @param WP_Customize_Manager $wp_customize Theme Customizer object.
- * @return void
+ * @since Nubrick 1.0
  */
-function twentytwelve_customize_register( $wp_customize ) {
-	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
-	$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
+function nubrick_credits() {
+	printf( '%s is ', get_bloginfo( 'name' ) );
 }
-add_action( 'customize_register', 'twentytwelve_customize_register' );
 
-/**
- * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_customize_preview_js() {
-	wp_enqueue_script( 'twentytwelve-customizer', get_template_directory_uri() . '/js/theme-customizer.js', array( 'customize-preview' ), '20120827', true );
-}
-add_action( 'customize_preview_init', 'twentytwelve_customize_preview_js' );
+add_action( 'twentytwelve_credits', 'nubrick_credits' );
