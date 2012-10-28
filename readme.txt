@@ -56,6 +56,6 @@ Sometimes you just have to take it back to the basics. Many people continue to u
 Support will be provided via the WordPress.org support forums or via the theme's repository support pages.
 
 = 1.0 =
-* Nubrick's initial relase
+* Nubrick's initial release
 
 
