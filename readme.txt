@@ -46,14 +46,14 @@ are licensed under GNU General Public Licemse version 2.
 Nubrick uses the built-in Customize functionality introduced in WP 3.4. You can access it by navigating to the Appearance > Themes menu and clicking the 'Customize' link next to the Nubrick theme listing.
 
 = I can't get any of my menus to show up in the header =
-By default, Nubrick doesn't support a menu in the header in an attempt to stay true to the design of Kubrick, which Nubrick is based on. You can however load a menu through adding a Custom Menu sidebar widget.
+Nubrick doesn't support a header menu and that's a feature! You can, however, load a menu through adding a Custom Menu sidebar widget.
 
 = Why on Earth would you want to revive something so awful as the Default/Kubrick theme?!
 Sometimes you just have to take it back to the basics. Many people continue to use the old, decrepit monster that the Default theme is. Nubrick allows you to use an old-skool design that's up to modern Web standards. Oh and there's cool custom header options even Default/Kubrick didn't have!
 
 == Support ==
 
-Support will be provided via the WordPress.org support forums or via the theme's repository support pages.
+Support will be provided via the WordPress.org support forums or via the theme repository support pages.
 
 = 1.0 =
 * Nubrick's initial release
