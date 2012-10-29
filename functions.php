@@ -2,7 +2,7 @@
 /**
  * Nubrick child theme functions
  *
- * @package WordPress
+ * @package Twenty_Twelve
  * @subpackage Nubrick
  * @since Nubrick 1.0
  */
