@@ -18,9 +18,11 @@
  * changes dynamically based on the value of the 'nubrick_site_width' setting.
  *
  * @uses load_child_theme_textdomain()
+ * @uses add_theme_support()
  * @since Nubrick 1.0
  */
 function nubrick_theme_setup() {
+	// Setup Nubrick child textdomain
 	load_child_theme_textdomain( 'nubrick', get_stylesheet_directory() . '/languages' );
 	
 	// Override default background color setting
