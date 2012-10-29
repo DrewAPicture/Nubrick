@@ -8,40 +8,40 @@
  */
 
 /**
- * Setup Nubrick Child Textdomain
+ * Nubrick Child Theme Setup
  *
  * Declares the textdomain for this child theme
  * Translations can be filed in the /languages/ directory
  *
+ * Also overrides custom-background and custom-header settings 
+ * defined by Twenty Twelve. The suggested width of header images
+ * changes dynamically based on the value of the 'nubrick_site_width' setting.
+ *
  * @uses load_child_theme_textdomain()
  * @since Nubrick 1.0
  */
-function nubrick_setup() {
+function nubrick_theme_setup() {
 	load_child_theme_textdomain( 'nubrick', get_stylesheet_directory() . '/languages' );
-}
-add_action( 'after_setup_theme', 'nubrick_setup' );
-
-
-/**
- * Reset Custom Background default color value.
- *
- * @since Nubrick 1.0
- */
-function nubrick_reset_supports() {	
-	// Remove custom-background support added by Twenty Twelve
-	remove_theme_support( 'custom-background' );
-
-	// Re-add with new default color
+	
+	// Override default background color setting
 	add_theme_support( 'custom-background', array(
 		'default-color' => 'e7e7e7'
 	) );
+	
+	// Override some custom header default settings
+	add_theme_support( 'custom-header', array(
+		'default-text-color' => 'fff',
+		'height' => 185,
+		'width' => get_theme_mod( 'nubrick_site_width' ),		
+	) );
 }
-add_action( 'after_setup_theme', 'nubrick_reset_supports' );
+add_action( 'after_setup_theme', 'nubrick_theme_setup' );
 
 
 /**
  * Dequeue unneeded scripts from Twenty Twelve
  *
+ * @uses wp_dequeue_script()
  * @since Nubrick 1.0
  */
 function nubrick_dequeue_scripts() {
@@ -57,6 +57,7 @@ add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
 /**
  * Enqueue dynamic stylesheet for Header Color gradient effect.
  *
+ * @uses get_them_mod()
  * @since Nubrick 1.0
  */
 function nubrick_enqueue_dynamic_styles() {	
@@ -321,7 +322,8 @@ add_action( 'customize_register', 'nubrick_customizer_init' );
 
 /**
  * Prepend the WordPress credits with our Nubricky message.
- * Using this action was overkill, I just wanted to!
+ *
+ * Using this action was overkill, just seemed like the thing to do.
  *
  * @since Nubrick 1.0
  */
