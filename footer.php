@@ -5,8 +5,7 @@
  * Contains footer content and the closing of the
  * #main and #page div elements.
  *
- * @package Twenty_Twelve
- * @subpackage Nubrick
+ * @package Nubrick
  * @since Nubrick 1.0
  */
 ?>

@@ -331,8 +331,8 @@ article.format-aside .aside {
 	}
 	.site {
 		/* Fallback if Customizer is disabled */
-		max-width: 740px;
-		max-width: 54.285714rem;
+		max-width: 860px;
+		max-width: 61.42857143rem;
 	}
 	.site-content {
 		width: 64.5%;

@@ -2,8 +2,7 @@
 /**
  * The template for displaying posts in the Status post format
  *
- * @package Twenty_Twelve
- * @subpackage Nubrick
+ * @package Nubrick
  * @since Nubrick 1.0
  */
 ?>

@@ -12,8 +12,7 @@
  *
  * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package Twenty_Twelve
- * @subpackage Nubrick
+ * @package Nubrick
  * @since Nubrick 1.0
  */
 

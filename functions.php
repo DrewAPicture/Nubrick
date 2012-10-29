@@ -2,8 +2,7 @@
 /**
  * Nubrick child theme functions
  *
- * @package Twenty_Twelve
- * @subpackage Nubrick
+ * @package Nubrick
  * @since Nubrick 1.0
  */
 
@@ -36,9 +35,11 @@ function nubrick_theme_setup() {
 		'height' => 185,
 		'width' => get_theme_mod( 'nubrick_site_width' ),		
 	) );
+
+	require_once( get_stylesheet_directory() . '/inc/nubrick_customizer_functions.php' );
+
 }
 add_action( 'after_setup_theme', 'nubrick_theme_setup' );
-
 
 /**
  * Dequeue unneeded scripts from Twenty Twelve
@@ -63,39 +64,56 @@ add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
  * @since Nubrick 1.0
  */
 function nubrick_enqueue_dynamic_styles() {	
-	// Setup dynamic style values
+	/**
+	 * Setup dynamic header style values
+	 *  1. First color
+	 *  2. Second color
+	 *  3. Gradient direction
+	 */
 	$first_color = str_replace( '#', '', get_theme_mod( 'nubrick_first_header_color' ) );
 	$second_color = str_replace( '#', '', get_theme_mod( 'nubrick_second_header_color' ) );
 	$direction = get_theme_mod( 'nubrick_gradient_direction' );
 
-	// Site width
-	$width = get_theme_mod( 'nubrick_site_width' );
-	if ( intval( $width ) < 1 || ! is_numeric( $width ) )
-		$width = '';
-
-	// Setup empty values
+	/**
+	 * Check for and assign header image source
+	 */
 	$header_img = $img = '';
-	
 	$header_img = get_header_image();
 	
 	if ( ! empty( $header_img ) )
 		$img = urlencode( $header_img );
 	
-	// Set single post flag
-	is_single() ? $single = true : $single = false;
+	/**
+	 * Check for and assign global link colors
+	 */
+	$links = str_replace( '#', '', get_theme_mod( 'nubrick_global_link_color' ) );
+	$hover = str_replace( '#', '', get_theme_mod( 'nubrick_global_hover_color' ) );
 
-	// Build query string from our values
-	// 
-	$options = sprintf( 'first=%1$s&second=%2$s&dir=%3$s&img=%4$s&single=%5$s&width=%6$s',
-	 	$first_color,
-		$second_color,
-		$direction,
-		$img,
-		$single,
-		$width
+	/**
+	 * Get dynamic site width
+	 */
+	$width = get_theme_mod( 'nubrick_site_width' );
+	if ( intval( $width ) < 1 || ! is_numeric( $width ) )
+		$width = '';
+
+	/**
+	 * Build our query string to pass to dynamic-style.php
+	 *  1: First header color
+	 *  2: Second header color
+	 *  3: Header gradient direction
+	 *  4: Global link color
+	 *  5: Global link:hover color
+	 *  6: Header image src
+	 *  7: Site width
+	 */
+	$options = sprintf( 'first=%1$s&second=%2$s&dir=%3$s&links=%4$s&hover=%5$s&img=%6$s&width=%7$s',
+	 	$first_color, $second_color, $direction, $links, $hover, $img, $width
 	);
 	
-	wp_register_style( 'nubrick-dynamic', get_stylesheet_directory_uri() . '/inc/dynamic-style.php?' . $options );
+	/**
+	 * Register and enqueue dynamic stylesheet
+	 */
+	wp_register_style( 'nubrick-dynamic', get_stylesheet_directory_uri() . '/css/dynamic-style.php?' . $options );
 	wp_enqueue_style( 'nubrick-dynamic' );
 }
 
@@ -221,105 +239,6 @@ function twentytwelve_entry_meta() {
 	<?php endif; // is_single
 
 }
-
-
-/**
- * Add Header Color options to Customizer.
- *
- * @param global $wp_customize
- * @since Nubrick 1.0
- */
-function nubrick_customizer_init( $wp_customize ) {
-	
-	/**
-	 * Temporarily unset 'Header Text Color' & 'Background Color'
-	 * controls from the Customizer, we'll add them back later.
-	 */
-	$wp_customize->remove_control( 'header_textcolor' );
-	$wp_customize->remove_control( 'background_color' );
-	
-	/**
-	 * Add 'Gradient Direction' select box
-	 * Default is 'Top'
-	 */
-	$wp_customize->add_setting( 'nubrick_gradient_direction', array( 'default' => 'top' ) );
-	$wp_customize->add_control( 'nubrick_gradient_direction', array(
-		'label' => __( 'Header Gradient Direction', 'nubrick' ),
-		'section' => 'colors',
-		'type' => 'select',
-		'choices' => array(
-			'top' => __( 'Top', 'nubrick' ),
-			'bottom' => __( 'Bottom', 'nubrick' ),
-			'left' => __( 'Left', 'nubrick' ),
-			'right' => __( 'Right', 'nubrick' ),
-			'left top' => __( 'Top Left', 'nubrick' ),
-			'right top' => __( 'Top Right', 'nubrick' ),
-			'left bottom' => __( 'Bottom Left', 'nubrick' ),
-			'right bottom' => __( 'Bottom Right', 'nubrick' )
-			)
-		)
-	);
-
-	/**
-	 * Add 'Top Color' setting & control to Customizer.
-	 * Default color is #69aee7
-	 */
-	$wp_customize->add_setting( 'nubrick_first_header_color', array( 'default' => '#69aee7' ) );
-	$wp_customize->add_control( 
-		new WP_Customize_Color_Control( $wp_customize, 'nubrick_first_header_color', array(
-			'label' => __( 'First Header Color', 'nubrick' ),
-			'section' => 'colors',
-			'settings' => 'nubrick_first_header_color',
-			) 
-		) 
-	);
-
-	/**
-	 * Add 'Bottom Color' setting & control to Customizer.
-	 * Default color is #4180b6
-	 */
-	$wp_customize->add_setting( 'nubrick_second_header_color', array( 'default' => '#4180b6' ) );
-	$wp_customize->add_control(
-		new WP_Customize_Color_Control( $wp_customize, 'nubrick_second_header_color', array(
-			'label' => __( 'Second Header Color', 'nubrick' ),
-			'section' => 'colors',
-			'settings' => 'nubrick_second_header_color'
-			)
-		)
-	);
-	
-	/**
-	 * Re-add 'Header Text Color' & 'Background Color' controls to Customizer.
-	 * Default background color is '#e7e7e7'
-	 */
-	$wp_customize->add_control(
-		new WP_Customize_Color_Control( $wp_customize, 'header_textcolor', array(
-			'label'   => __( 'Header Text Color', 'nubrick' ),
-			'section' => 'colors'
-			)
-		)
-	);
-	$wp_customize->add_control(
-		new WP_Customize_Color_Control( $wp_customize, 'background_color', array(
-			'label'   => __( 'Background Color', 'nubrick' ),
-			'section' => 'colors'
-			)
-		)
-	);
-
-	/**
-	 * Add Site Width setting
-	 * Default is 740px
-	 */
-	$wp_customize->add_setting( 'nubrick_site_width', array( 'default' => 740 ) );
-	$wp_customize->add_control( 'nubrick_site_width', array( 
-		'label' => __( 'Site Width (px)', 'nubrick' ),
-		'section' => 'colors'
-		)
-	);
-
-}
-add_action( 'customize_register', 'nubrick_customizer_init' );
 
 
 /**

@@ -2,8 +2,7 @@
 /**
  * The Template for displaying all single posts.
  *
- * @package Twenty_Twelve
- * @subpackage Nubrick
+ * @package Nubrick
  * @since Nubrick 1.0
  */
 
