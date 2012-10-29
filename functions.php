@@ -35,11 +35,9 @@ function nubrick_theme_setup() {
 		'height' => 185,
 		'width' => get_theme_mod( 'nubrick_site_width' ),		
 	) );
-
-	require_once( get_stylesheet_directory() . '/inc/nubrick_customizer_functions.php' );
-
 }
 add_action( 'after_setup_theme', 'nubrick_theme_setup' );
+
 
 /**
  * Dequeue unneeded scripts from Twenty Twelve
@@ -55,6 +53,15 @@ function nubrick_dequeue_scripts() {
 	wp_dequeue_style( 'twentytwelve-fonts' );
 }
 add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
+
+
+/**
+ * Nubrick Customizer Controls
+ */
+require_once( get_stylesheet_directory() . '/inc/nubrick_customizer.class.php' );
+
+if ( class_exists( 'Nubrick_Customizer' ) )
+	new Nubrick_Customizer;
 
 
 /**
