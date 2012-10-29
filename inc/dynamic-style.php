@@ -7,7 +7,7 @@ header( 'Content-type: text/css');
  * 	2. The single post view
  *  3. Dynamic site width
  *
- * @package WordPress
+ * @package Twenty_Twelve
  * @subpackage Nubrick
  * @since Nubrick 1.0
  */
