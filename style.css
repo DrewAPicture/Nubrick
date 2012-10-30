@@ -395,9 +395,9 @@ article.format-aside .aside {
 		display: block;
 		margin-bottom: 7px;
 		background: #ddd url('js/img/up-arrow.png') no-repeat center center;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
+		-webkit-border-radius: 45px;
+		-moz-border-radius: 45px;
+		border-radius: 45px;
 
 		/* transition */
 		-webkit-transition: 1s;
