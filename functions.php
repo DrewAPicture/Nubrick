@@ -2,6 +2,10 @@
 /**
  * Nubrick child theme functions
  *
+ * The functions defined in this file generally serve one
+ * of two purposes: 1) Provide functionality unique to the child theme
+ * 2) Override pluggable parent theme functions.
+ *
  * @package Nubrick
  * @since Nubrick 1.0
  */
@@ -42,16 +46,21 @@ function nubrick_theme_setup() {
 	// Register 'footer' nav menu for Nubrick
 	register_nav_menu( 'footer', __( 'Primary Menu: Footer', 'nubrick' ) );
 
-	// Unregister 'primary' nav menu registered by Twenty Twelve
+	// Unregister 'primary' nav menu from Twenty Twelve
 	unregister_nav_menu( 'primary' );
 }
 add_action( 'after_setup_theme', 'nubrick_theme_setup', 11 );
 
 
 /**
- * Dequeue unneeded scripts from Twenty Twelve
+ * Dequeue unneeded Twenty Twelve scripts/styles.
  *
- * @uses wp_dequeue_script()
+ * In the spirit of the 'Default' theme Nubrick is based on, a header navigation
+ * menu is unnecessary as was the Web font inlcuded with Twenty Twelve, 'Open Sans',
+ * Both are dequeued from printing using this function.
+ *
+ * @uses wp_dequeue_script() to dequeue Twenty Twelve's navigation script
+ * @uses wp_dequeue_style() to dequeue Twenty Twelve's web font, Open Sans
  * @since Nubrick 1.0
  */
 function nubrick_dequeue_scripts() {
@@ -74,9 +83,17 @@ if ( class_exists( 'Nubrick_Customizer' ) )
 
 
 /**
- * Enqueue dynamic stylesheet for Header Color gradient effect.
+ * Enqueue Nubrick dynamic stylesheet.
  *
- * @uses get_them_mod()
+ * Nubrick uses a dynamic stylesheet in the form of a php file, which allows information
+ * to be passed dynamically (and change dynamically) without printing messy CSS declarations
+ * directly in the source code. It also allows live-preview of generated styles to work in
+ * the Theme Customizer without postMessage. Values passed to the stylesheet include the header 
+ * gradient settings, link colors, the source to a custom header image and a dynamic site width.
+ *
+ * @uses get_them_mod() to pull settings for header colors, link colors and site width
+ * @uses wp_register_style() to register the dynamic stylesheet with query string variables
+ * @uses wp_enqueue_style() to enqueue the dynamic stylesheet
  * @since Nubrick 1.0
  */
 function nubrick_enqueue_dynamic_styles() {	
@@ -180,8 +197,13 @@ function nubrick_content_nav_single() {
 /**
  * Overwrites twentytwelve_entry_meta()
  *
- * Prints HTML with meta information for current post: categories, tags, permalink, author and date.
+ * Prints HTML with meta information for current post: categories,
+ * tags, permalink, author and date.
  *
+ * @uses get_the_category_list() to generate a comma-separated list of categories
+ * @uses comments_open() to check if comments are open for the given post
+ * @uses pings_open() to check if pings/trackbacks are open for the given post
+ * @uses comments_popup_link() to generate the nooped Comment count text
  * @since Nubrick 1.0
  */
 function twentytwelve_entry_meta() {
@@ -262,6 +284,7 @@ function twentytwelve_entry_meta() {
  *
  * Using this action was overkill, just seemed like the thing to do.
  *
+ * @uses get_bloginfo() to output the site name in the footer
  * @since Nubrick 1.0
  */
 function nubrick_credits() {
