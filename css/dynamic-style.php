@@ -12,9 +12,8 @@ header( 'Content-type: text/css');
  *
  * @package Nubrick
  * @since Nubrick 1.0
- */
+ */	
 
-	
 	/**
 	 * Setup Site Width
 	 *  1. Check if width parameter is set, if not, set default of 860.
@@ -86,7 +85,8 @@ header( 'Content-type: text/css');
 .page-links a,
 .gallery-caption a,
 .widget-area .widget li a,
-footer.entry-meta a {
+footer.entry-meta a,
+#footer-menu li a {
 	color: <?php echo $links; ?>;
 }
 
@@ -94,6 +94,7 @@ footer.entry-meta a {
 .page-links aLhover,
 .gallery-caption a:hover,
 .widget-area .widget li a:hover,
-footer.entry-meta a:hover {
+footer.entry-meta a:hover,
+#footer-menu li a:hover {
 	color: <?php echo $hover; ?>;
 }
