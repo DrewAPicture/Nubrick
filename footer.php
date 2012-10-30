@@ -10,17 +10,17 @@
  */
 ?>
 	</div><!-- #main .wrapper -->
-	<p id="scroll-top" style="display: block;">
-			<a href="#top"><span></span></a>
-		</p>
+	<p id="scroll-top">
+		<a href="#top"><span></span></a>
+	</p>
 	<footer id="colophon" role="contentinfo">
 		<nav id="footer-menu">
-			<?php wp_nav_menu( array( 'theme_location' => 'footer', 'depth' => 0 ) ); ?>
+			<?php wp_nav_menu( array( 'theme_location' => 'footer', 'depth' => 0, 'fallback_cb' => false ) ); ?>
 		</nav><!-- /#footer-menu -->
 		<div class="site-info">
 			<?php do_action( 'twentytwelve_credits' ); ?>
-			<a href="<?php echo esc_url( __( 'http://wordpress.org/', 'twentytwelve' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'twentytwelve' ); ?>" rel="generator">
-				<?php printf( __( 'proudly powered by %s', 'twentytwelve' ), 'WordPress' ); ?>
+			<a href="<?php echo esc_url( __( 'http://wordpress.org/', 'nubrick' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'nubrick' ); ?>">
+				<?php printf( __( 'proudly powered by %s', 'nubrick' ), 'WordPress' ); ?>
 			</a><br />
 			<a href="<?php bloginfo( 'rss2_url' ); ?>">Entries (RSS)</a>
 			and <a href="<?php bloginfo( 'comments_rss2_url' ); ?>">Comments (RSS)</a>
