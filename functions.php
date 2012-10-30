@@ -53,6 +53,15 @@ add_action( 'after_setup_theme', 'nubrick_theme_setup', 11 );
 
 
 /**
+ * Nubrick Customizer Controls
+ */
+require_once( get_stylesheet_directory() . '/inc/nubrick_customizer.class.php' );
+
+if ( class_exists( 'Nubrick_Customizer' ) )
+	new Nubrick_Customizer;
+
+
+/**
  * Dequeue unneeded Twenty Twelve scripts/styles.
  *
  * In the spirit of the 'Default' theme Nubrick is based on, a header navigation
@@ -74,12 +83,18 @@ add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
 
 
 /**
- * Nubrick Customizer Controls
+ * Enqueue scroll-to-top script.
+ *
+ * This scroll-to-top script has been intentionally enqueued separately from the dynamic
+ * stylesheet just to provide some granularity between the separate enqueue actions.
+ * 
+ * @since Nubrick 1.0
  */
-require_once( get_stylesheet_directory() . '/inc/nubrick_customizer.class.php' );
-
-if ( class_exists( 'Nubrick_Customizer' ) )
-	new Nubrick_Customizer;
+function nubrick_enqueue_scroll_script() {
+	wp_register_script( 'nubrick-scroll', get_stylesheet_directory_uri() . '/js/top_scroll.js', 'jquery' );
+	wp_enqueue_script( 'nubrick-scroll' );
+}
+add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_scroll_script' );
 
 
 /**
@@ -149,23 +164,8 @@ function nubrick_enqueue_dynamic_styles() {
 	wp_register_style( 'nubrick-dynamic', get_stylesheet_directory_uri() . '/css/dynamic-style.php?' . $options );
 	wp_enqueue_style( 'nubrick-dynamic' );
 }
-
 // Priority 30 to make sure it gets printed AFTER style.css
 add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_dynamic_styles', 30 );
-
-
-/**
- * Enqueue scroll-to-top script
- *
- * @since Nubrick 1.0
- */
-function nubrick_enqueue_scroll_script() {
-	// Register scroll script
-	wp_register_script( 'nubrick-scroll', get_stylesheet_directory_uri() . '/js/top_scroll.js', 'jquery' );
-	// Enqueue script
-	wp_enqueue_script( 'nubrick-scroll' );
-}
-add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_scroll_script' );
 
 
 /**
@@ -204,7 +204,7 @@ function nubrick_content_nav_single() {
 			<span class="nav-previous"><?php previous_post_link( '%link', '<span class="meta-nav">' . _x( '&laquo;', 'Previous post link', 'nubrick' ) . '</span> %title' ); ?></span>
 			<span class="nav-next"><?php next_post_link( '%link', '%title <span class="meta-nav">' . _x( '&raquo;', 'Next post link', 'nubrick' ) . '</span>' ); ?></span>
 		</nav><!-- .nav-single -->
-	<?php endif;	
+	<?php endif;
 }
 
 
@@ -262,23 +262,10 @@ function twentytwelve_entry_meta() {
 	<p><?php __( 'Tags: ', 'nubrick' ); the_tags( __( 'Tags: ', 'nubrick' ), ', ' ); ?></p>
 
 	<?php if ( is_single() ) : ?>
-
 		<p class="alt">
-			<small>
-				<?php 
-				printf( $single_meta,
-					$date,
-					get_the_time(),
-					$categories_list,
-					get_post_comments_feed_link(),
-					$comments_pings
-				);
-				?>
-			</small>
+			<small><?php printf( $single_meta, $date, get_the_time(), $categories_list, get_post_comments_feed_link(), $comments_pings ); ?></small>
 		</p><!-- /.alt -->
-
 	<?php else: ?>
-
 		<p>
 			<?php 
 			printf( __( 'Posted in %s', 'nubrick' ), $categories_list );
@@ -287,9 +274,7 @@ function twentytwelve_entry_meta() {
 			comments_popup_link( __( 'No Comments &#187;', 'nubrick' ), __( '1 Comment', 'nubrick' ), __( '% Comments', 'nubrick' ), __( 'Comments Off', 'nubrick' ) );
 			?>
 		</p>
-
 	<?php endif; // is_single
-
 }
 
 
@@ -304,5 +289,4 @@ function twentytwelve_entry_meta() {
 function nubrick_credits() {
 	printf( '%s is ', get_bloginfo( 'name' ) );
 }
-
 add_action( 'twentytwelve_credits', 'nubrick_credits' );
