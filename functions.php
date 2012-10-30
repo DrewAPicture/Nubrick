@@ -16,7 +16,10 @@
  * defined by Twenty Twelve. The suggested width of header images
  * changes dynamically based on the value of the 'nubrick_site_width' setting.
  *
- * @uses load_child_theme_textdomain()
+ * @uses load_child_theme_textdomain() to set child textdomain
+ * @uses add_theme_support() to modify custom-background and custom-header defaults
+ * @uses unregister_nav_menu() to unregister 'primary' menu
+ * @uses register_nav_menu() to register 'footer' menu
  * @uses add_theme_support()
  * @since Nubrick 1.0
  */
@@ -35,8 +38,14 @@ function nubrick_theme_setup() {
 		'height' => 185,
 		'width' => get_theme_mod( 'nubrick_site_width' ),		
 	) );
+	
+	// Register 'footer' nav menu for Nubrick
+	register_nav_menu( 'footer', __( 'Primary Menu: Footer', 'nubrick' ) );
+
+	// Unregister 'primary' nav menu registered by Twenty Twelve
+	unregister_nav_menu( 'primary' );
 }
-add_action( 'after_setup_theme', 'nubrick_theme_setup' );
+add_action( 'after_setup_theme', 'nubrick_theme_setup', 11 );
 
 
 /**
