@@ -155,6 +155,20 @@ add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_dynamic_styles', 30 );
 
 
 /**
+ * Enqueue scroll-to-top script
+ *
+ * @since Nubrick 1.0
+ */
+function nubrick_enqueue_scroll_script() {
+	// Register scroll script
+	wp_register_script( 'nubrick-scroll', get_stylesheet_directory_uri() . '/js/top_scroll.js', 'jquery' );
+	// Enqueue script
+	wp_enqueue_script( 'nubrick-scroll' );
+}
+add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_scroll_script' );
+
+
+/**
  * Overwrite twentytwelve_content_nav().
  * 
  * NOTE:
