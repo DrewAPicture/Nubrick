@@ -17,7 +17,7 @@ class Nubrick_Customizer {
 	 * @since Nubrick 1.0
 	 */
 	public function __construct() {
-		add_action( 'customize_register', array( $this, 'add_rearrange_settings' ) );
+		add_action( 'customize_register', array( $this, 'modify_settings' ) );
 	}
 	
 	/**
@@ -26,7 +26,7 @@ class Nubrick_Customizer {
 	 * @param WP_Customize_Manager $wp_customize
 	 * @since Nubrick 1.0
 	 */
-	public static function add_rearrange_settings( $wp_customize ) {
+	public static function modify_settings( $wp_customize ) {
 
 		/**
 		 * Temporarily remove built-in controls/sections
@@ -42,9 +42,11 @@ class Nubrick_Customizer {
 		/**
 		 * Add Custom Nubrick Sections/Re-add 'colors'
 		 *
-		 * Adds 'Site Settings' section below 'Site Title & Tagline'
-		 * Adds 'Header Settings' section below 'Site Settings'
-		 * Re-adds 'colors' section renamed to 'Other Colors' below 'Header Image'
+		 * Adds:
+		 * 		1. 'Site Settings' section below 'Site Title & Tagline'
+		 * 		2. 'Header Settings' section below 'Site Settings'
+		 * Re-adds:
+		 * 		1. 'colors' section renamed to 'Other Colors' below 'Header Image'
 		 */
 		$wp_customize->add_section( 'nubrick_site_settings', array(
 			'title' => __( 'Site Settings', 'nubrick' ),
@@ -55,7 +57,7 @@ class Nubrick_Customizer {
 			'priority' => 45
 		) );
 		$wp_customize->add_section( 'colors', array(
-			'title' => 'Other Colors',
+			'title' => __( 'Other Colors', 'nubrick' ),
 			'priority' => 65
 		) );		
 
@@ -63,12 +65,13 @@ class Nubrick_Customizer {
 		/**
 		 * Add Custom Nubrick Settings
 		 *
-		 * Adds 'Site Width' setting 			default: 860
-		 * Adds 'Gradient direction' setting 	default: 'top'
-		 * Adds 'First header color' setting 	default: '#69aee7'
-		 * Adds 'Second header color' setting 	default: '#4180b6'
-		 * Adds 'Links color' setting		 	default: '#0066CC'
-		 * Adds 'Links hover color' setting		default: '#114477'
+		 * Adds:
+		 * 		1. 'Site Width' setting 			default: 860
+		 * 		2. 'Gradient direction' setting 	default: 'top'
+		 * 		3. 'First header color' setting 	default: '#69aee7'
+		 * 		4. 'Second header color' setting 	default: '#4180b6'
+		 * 		5. 'Links color' setting		 	default: '#0066CC'
+		 * 		6. 'Links hover color' setting		default: '#114477'
 		 */
 		$wp_customize->add_setting( 'nubrick_site_width', array( 'default' => 860 ) );
 		$wp_customize->add_setting( 'nubrick_gradient_direction', array( 'default' => 'top' ) );
@@ -82,22 +85,26 @@ class Nubrick_Customizer {
 		/**
 		 * Add Custom Nubrick Controls/Re-add removed controls
 		 *
-		 * Adds 'Site Width (in pixels)' control 	to 'Site Settings'
-		 * Adds 'Header Gradient Direction' control to 'Header Colors'
-		 * Adds 'First Header Color' control 		to 'Header Colors'
-		 * Adds 'Second Header Color' control 		to 'Header Colors'
-		 * Re-adds 'Header Text Color' control 		to 'Header Colors'
-		 * Adds 'Link Color' control 				to 'Other Colors'
-		 * Adds 'Link Hover Color' control 			to 'Other Colors'
-		 * Re-adds 'Background Color' control 		to 'Other Colors'
+		 * Adds:
+		 * 		1. 'Site Width (in pixels)' control 	to 'Site Settings'
+		 * 		2. 'Header Gradient Direction' control 	to 'Header Colors'
+		 * 		3. 'First Header Color' control 		to 'Header Colors'
+		 * 		4. 'Second Header Color' control 		to 'Header Colors'
+		 * Re-adds:
+		 * 		1. 'Header Text Color' control 			to 'Header Colors'
+		 * 		2. 'Background Color' control 			to 'Other Colors'
+		 * Adds:
+		 * 		1. 'Link Color' control 				to 'Other Colors'
+		 * 		2. 'Link Hover Color' control 			to 'Other Colors'
 		 */
-	// Site Settings
+
+		// Site Settings
 		$wp_customize->add_control( 'nubrick_site_width', array( 
 			'label' => __( 'Site Width (in pixels)', 'nubrick' ),
 			'section' => 'nubrick_site_settings'
 		) );
 		
-	// Header Colors
+		// Header Colors
 		$wp_customize->add_control( 'nubrick_gradient_direction', array(
 			'label' => __( 'Header Gradient Direction', 'nubrick' ),
 			'section' => 'nubrick_header_colors',
@@ -135,7 +142,14 @@ class Nubrick_Customizer {
 			) )
 		);
 
-	// Other Colors
+		// Other Colors
+		$wp_customize->add_control(
+			new WP_Customize_Color_Control( $wp_customize, 'background_color', array(
+				'label'   => __( 'Background Color', 'nubrick' ),
+				'section' => 'colors',
+				'priority' => 1
+			) )
+		);		
 		$wp_customize->add_control(
 			new WP_Customize_Color_Control( $wp_customize, 'nubrick_global_link_color', array(
 				'label' => __( 'Link Color', 'nubrick' ),
@@ -148,12 +162,6 @@ class Nubrick_Customizer {
 				'section' => 'colors'
 			) ) 
 		);
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control( $wp_customize, 'background_color', array(
-				'label'   => __( 'Background Color', 'nubrick' ),
-				'section' => 'colors',
-				'priority' => 1
-			) )
-		);		
 	}
-}
+
+} // Nubrick_Customizer
