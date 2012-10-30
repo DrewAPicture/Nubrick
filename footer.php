@@ -11,6 +11,9 @@
 ?>
 	</div><!-- #main .wrapper -->
 	<footer id="colophon" role="contentinfo">
+		<nav id="footer-menu">
+			<?php wp_nav_menu( array( 'theme_location' => 'footer', 'depth' => 0 ) ); ?>
+		</nav><!-- /#footer-menu -->
 		<div class="site-info">
 			<?php do_action( 'twentytwelve_credits' ); ?>
 			<a href="<?php echo esc_url( __( 'http://wordpress.org/', 'twentytwelve' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'twentytwelve' ); ?>" rel="generator">
