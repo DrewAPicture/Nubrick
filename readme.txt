@@ -46,7 +46,10 @@ are licensed under GNU General Public Licemse version 2.
 Nubrick uses the built-in Customize functionality introduced in WP 3.4. You can access it by navigating to the Appearance > Themes menu and clicking the 'Customize' link next to the Nubrick theme listing.
 
 = I can't get any of my menus to show up in the header =
-Nubrick doesn't support a header menu and that's a feature! You can, however, load a menu through adding a Custom Menu sidebar widget.
+Nubrick doesn't support a header menu and that's a feature! You can, however, create a menu and assign it to the footer, or load a menu in the sidebar using a Custom Menu widget.
+
+= I really just want the original "blue" gradient from the old 'Default' theme =
+To get the old gradient colors, you'll want to set the first header color to `#69aee7`, and the second color to `#4180b6`.
 
 = Why on Earth would you want to revive something so awful as the Default/Kubrick theme?!
 Sometimes you just have to take it back to the basics. Many people continue to use the old, decrepit monster that the Default theme is. Nubrick allows you to use an old-skool design that's up to modern Web standards. Oh and there's cool custom header options even Default/Kubrick didn't have!
