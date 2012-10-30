@@ -68,16 +68,16 @@ class Nubrick_Customizer {
 		 * Adds:
 		 * 		1. 'Site Width' setting 			default: 860
 		 * 		2. 'Gradient direction' setting 	default: 'top'
-		 * 		3. 'First header color' setting 	default: '#69aee7'
-		 * 		4. 'Second header color' setting 	default: '#4180b6'
-		 * 		5. 'Links color' setting		 	default: '#0066CC'
+		 * 		3. 'First header color' setting 	default: '#fc7b2a'
+		 * 		4. 'Second header color' setting 	default: '#c71c09'
+		 * 		5. 'Links color' setting		 	default: '#0066cc'
 		 * 		6. 'Links hover color' setting		default: '#114477'
 		 */
 		$wp_customize->add_setting( 'nubrick_site_width', array( 'default' => 860 ) );
 		$wp_customize->add_setting( 'nubrick_gradient_direction', array( 'default' => 'top' ) );
-		$wp_customize->add_setting( 'nubrick_first_header_color', array( 'default' => '#69aee7' ) );
-		$wp_customize->add_setting( 'nubrick_second_header_color', array( 'default' => '#4180b6' ) );
-		$wp_customize->add_setting( 'nubrick_global_link_color', array( 'default' => '#0066CC' ) );
+		$wp_customize->add_setting( 'nubrick_first_header_color', array( 'default' => '#fc7b2a' ) );
+		$wp_customize->add_setting( 'nubrick_second_header_color', array( 'default' => '#c71c09' ) );
+		$wp_customize->add_setting( 'nubrick_global_link_color', array( 'default' => '#0066cc' ) );
 		$wp_customize->add_setting( 'nubrick_global_link_hover', array( 'default' => '#114477' ) );
 
 
