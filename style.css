@@ -243,6 +243,23 @@ a:hover {
 footer[role="contentinfo"] {
 	text-align: center;
 }
+#footer-menu li {
+	display: inline;
+	vertical-align: baseline;
+	line-height: 1;
+}
+#footer-menu li:after {
+	content: " | ";
+	color: #777;
+}
+#footer-menu li a {
+	font-weight: bold;
+	font-size: 1em;
+	color: #333;
+}
+#footer-menu li:last-child:after {
+	content: "";
+}
 
 
 /* =Main content
