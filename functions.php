@@ -16,7 +16,7 @@
  * Declares the textdomain for this child theme
  * Translations can be filed in the /languages/ directory
  *
- * Also overrides custom-background and custom-header settings 
+ * Also overrides some custom-background and custom-header defaults 
  * defined by Twenty Twelve. The suggested width of header images
  * changes dynamically based on the value of the 'nubrick_site_width' setting.
  *
