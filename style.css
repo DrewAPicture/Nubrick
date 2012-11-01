@@ -352,7 +352,7 @@ article.format-aside .aside {
 		max-width: 61.42857143rem;
 	}
 	.site-content {
-		width: 64.5%;
+		max-width: 64.5%;
 	}
 	.widget-area {
 		width: 32%;
