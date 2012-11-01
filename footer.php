@@ -10,9 +10,6 @@
  */
 ?>
 	</div><!-- #main .wrapper -->
-	<p id="scroll-top">
-		<a href="#top"><span></span></a>
-	</p>
 	<footer id="colophon" role="contentinfo">
 		<nav id="footer-menu">
 			<?php wp_nav_menu( array( 'theme_location' => 'footer', 'depth' => 0, 'fallback_cb' => false ) ); ?>

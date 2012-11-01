@@ -83,21 +83,6 @@ add_action( 'wp_enqueue_scripts', 'nubrick_dequeue_scripts', 11 );
 
 
 /**
- * Enqueue scroll-to-top script.
- *
- * This scroll-to-top script has been intentionally enqueued separately from the dynamic
- * stylesheet just to provide some granularity between the separate enqueue actions.
- * 
- * @since Nubrick 1.0
- */
-function nubrick_enqueue_scroll_script() {
-	wp_register_script( 'nubrick-scroll', get_stylesheet_directory_uri() . '/js/top_scroll.js', 'jquery' );
-	wp_enqueue_script( 'nubrick-scroll' );
-}
-add_action( 'wp_enqueue_scripts', 'nubrick_enqueue_scroll_script' );
-
-
-/**
  * Enqueue Nubrick dynamic stylesheet.
  *
  * Nubrick uses a dynamic stylesheet in the form of a php file, which allows information
